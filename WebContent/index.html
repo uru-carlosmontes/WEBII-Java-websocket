@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="text" id="message" /> 
+	<button onclick="sendMessage()">SEND</button>
+	
+	<h3>MESSAGES:</h3>
+	<div id="inbox"></div>
+
+	<script>
+		
+		function $(id) {
+			return document.getElementById(id);
+		};
+
+		var ws = new WebSocket("ws://"+location.host+"/ErChat/chat");
+
+		ws.onmessage = function (e) {
+			$("inbox").textContent += '\n' + e.data;
+		};
+
+		ws.onopen = function (e) {
+			$("inbox").textContent = '\n Conection Success';
+		};
+
+		ws.onclose = function (e) {
+			$("inbox").textContent = '\n Connection Finished';
+		};
+
+		ws.onerror = function (e) {
+			$("inbox").textContent = e.data;
+		};
+
+		function sendMessage() {
+			var text = $("message").value;
+			ws.send(text);
+		}
+
+	</script>
+</body>
+</html>
